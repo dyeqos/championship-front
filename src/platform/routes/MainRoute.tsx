@@ -1,5 +1,9 @@
 import { createBrowserRouter } from "react-router";
 import { MainLayout } from "@/frames/layouts/MainLayout";
+import { DashboardLayout } from "@/modules/dashboard/layout/DashboardLayout";
+import { DashboardPages } from "@/modules/dashboard/pages/DashboardPages";
+import { ChampionshipLayout } from "@/modules/championship/layouts/ChampionshipLayout";
+import { ChampionshipPage } from "@/modules/championship/pages/ChampionshipPages";
 
 export const MainRouter = createBrowserRouter([
   {
@@ -7,8 +11,25 @@ export const MainRouter = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <DashboardPages />,
+          },
+        ],
+      },
+      {
         path: "championship",
-        element: <h1>campeonatos</h1>,
+        element: <ChampionshipLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <ChampionshipPage onChampionshipClick={ChampionshipLayout} />
+            ),
+          },
+        ],
       },
       {
         path: "teams",
