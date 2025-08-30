@@ -1,18 +1,18 @@
+import { use } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, Trophy } from "lucide-react";
+import { ButtonToggleContext } from "@/frames/context/ButtonToggleContext";
 
-interface Props {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+export const LeftSideComponent = () => {
+  const { isOpenToggle, setOpenToggle } = use(ButtonToggleContext);
 
-export const LeftSideComponent = ({ setIsOpen }: Props) => {
   return (
     <div className="flex items-center gap-4">
       <Button
         variant="ghost"
         size="sm"
         className="p-2"
-        onClick={() => setIsOpen((isOpen) => !isOpen)}
+        onClick={() => setOpenToggle(!isOpenToggle)}
       >
         <Menu className="h-5 w-5" />
       </Button>

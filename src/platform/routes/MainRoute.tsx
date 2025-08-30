@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router";
-import { MainLoyout } from "@/frames/layouts/MainLoyout";
+import { MainLayout } from "@/frames/layouts/MainLayout";
 
-export const mainRouter = createBrowserRouter([
+export const MainRouter = createBrowserRouter([
   {
     path: "/",
-    element: <MainLoyout />,
+    element: <MainLayout />,
     children: [
       {
         path: "championship",

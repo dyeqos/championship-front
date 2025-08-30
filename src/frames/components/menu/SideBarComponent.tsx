@@ -1,8 +1,7 @@
+import { use } from "react";
+import { ButtonToggleContext } from "@/frames/context/ButtonToggleContext";
 import { Home, Trophy, Users, Calendar, Target } from "lucide-react";
-interface Props {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+
 const navigation = [
   { name: "Dashboard", href: "#", icon: Home, current: true },
   { name: "Championships", href: "#", icon: Trophy, current: false },
@@ -10,12 +9,13 @@ const navigation = [
   { name: "Fixtures", href: "#", icon: Calendar, current: false },
   { name: "Top Scorers", href: "#", icon: Target, current: false },
 ];
-export const SideBarComponent = ({ isOpen, setIsOpen }: Props) => {
+export const SideBarComponent = () => {
+  const { isOpenToggle, setOpenToggle } = use(ButtonToggleContext);
   return (
     <>
       <aside
         className={`${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpenToggle ? "translate-x-0" : "-translate-x-full"
         } fixed inset-y-0 left-0 z-40 w-64 bg-sidebar border-r border-sidebar-border transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 mt-16 lg:mt-0`}
       >
         <div className="flex flex-col h-full pt-5 pb-4 overflow-y-auto">
@@ -45,10 +45,10 @@ export const SideBarComponent = ({ isOpen, setIsOpen }: Props) => {
       </aside>
 
       {/* Overlay for mobile */}
-      {isOpen && (
+      {isOpenToggle && (
         <div
           className="fixed inset-0 z-30 bg-black/50 lg:hidden"
-          onClick={() => setIsOpen(false)}
+          onClick={() => setOpenToggle(false)}
         />
       )}
     </>

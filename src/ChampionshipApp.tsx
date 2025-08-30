@@ -1,10 +1,10 @@
 import { RouterProvider } from "react-router";
-import { mainRouter } from "./platform/routes/MainRoute";
+import { MainRouter } from "./platform/routes/MainRoute";
 
 export const ChampionshipApp = () => {
   return (
     <>
-      <RouterProvider router={mainRouter} />
+      <RouterProvider router={MainRouter} />
     </>
   );
 };
