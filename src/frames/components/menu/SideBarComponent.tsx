@@ -16,15 +16,13 @@ export const SideBarComponent = () => {
       {/* lg:translate-x-0 */}
       <aside
         className={`${
-          isOpenToggle ? "translate-x-0" : "-translate-x-full"
-        } fixed inset-y-0 left-0 z-40 w-64 bg-sidebar border-r border-sidebar-border transition-transform duration-300 ease-in-out  ${
           isOpenToggle
-            ? " lg:translate-x-0 lg:static lg:inset-0 mt-16 lg:mt-0"
-            : ""
-        }  `}
+            ? "translate-x-0 lg:translate-x-0 lg:static lg:inset-0 lg:mt-0 "
+            : "-translate-x-full lg:mt-16 "
+        } mt-16 sm:mt-16 md:mt-16 fixed inset-y-0 left-0 z-40 w-64 bg-sidebar border-r border-sidebar-border transition-transform duration-300 ease-in-out  *: *:`}
       >
         <div className="flex flex-col h-full pt-5 pb-4 overflow-y-auto">
-          <nav className="mt-5 flex-1 px-2 space-y-1">
+          <nav className=" flex-1 px-2 space-y-1">
             {navigation.map((item) => (
               <a
                 key={item.name}

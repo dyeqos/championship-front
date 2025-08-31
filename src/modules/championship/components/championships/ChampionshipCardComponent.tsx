@@ -53,10 +53,10 @@ export const ChampionshipCardComponent = ({ championship }: Props) => {
         onClick={() => handleCardClick(championship.id)}
       >
         {/* Header with Status Badge */}
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-3">
+        <div className="flex items-start justify-between min-h-23">
+          <div className="flex space-x-3">
             <div
-              className={`w-12 h-12 ${getCategoryColor(
+              className={`w-12 h-12 flex-none ${getCategoryColor(
                 championship.category
               )} rounded-full flex items-center justify-center`}
             >

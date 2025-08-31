@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { PanelCard } from "@/components/customs/PanelCard";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -9,7 +9,7 @@ interface Props {
   championships: Championship[];
 }
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -19,7 +19,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 50,
@@ -43,7 +43,7 @@ export const ChampionshipMotionComponent = ({ championships }: Props) => {
       {" "}
       {championships.length > 0 ? (
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-4  lg:gab-6  "
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6 sm:gap-4  lg:gab-6  "
           variants={containerVariants}
           initial="hidden"
           animate="visible"
