@@ -4,7 +4,7 @@ import { PanelCard } from "@/components/customs/PanelCard";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { ChampionshipCardComponent } from "./ChampionshipCardComponent";
-import type { Championship } from "../../championship/ChampionshipInterface";
+import type { Championship } from "../../interfaces/ChampionshipInterface";
 interface Props {
   championships: Championship[];
 }

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit, Calendar, Users } from "lucide-react";
 import { motion } from "framer-motion";
-import type { Championship } from "../../championship/ChampionshipInterface";
+import type { Championship } from "../../interfaces/ChampionshipInterface";
 
 const getStatusBadge = (status: string) => {
   switch (status) {

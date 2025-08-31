@@ -1,4 +1,4 @@
-import type { Championship } from "../championship/ChampionshipInterface";
+import type { Championship } from "../interfaces/ChampionshipInterface";
 
 export const mockChampionships: Championship[] = [
   {
