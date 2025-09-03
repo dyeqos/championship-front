@@ -4,6 +4,8 @@ import { DashboardLayout } from "@/modules/dashboard/layout/DashboardLayout";
 import { DashboardPages } from "@/modules/dashboard/pages/DashboardPages";
 import { ChampionshipLayout } from "@/modules/championship/layouts/ChampionshipLayout";
 import { ChampionshipPage } from "@/modules/championship/pages/ChampionshipPages";
+import { ParamLayout } from "@/modules/parameter/Layouts/ParamLayout";
+import { ParamPage } from "@/modules/parameter/pages/ParamPage";
 
 export const MainRouter = createBrowserRouter([
   {
@@ -25,15 +27,19 @@ export const MainRouter = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <ChampionshipPage onChampionshipClick={ChampionshipLayout} />
-            ),
+            element: <ChampionshipPage />,
           },
         ],
       },
       {
-        path: "teams",
-        element: <h1>equipos</h1>,
+        path: "params",
+        element: <ParamLayout />,
+        children: [
+          {
+            index: true,
+            element: <ParamPage />,
+          },
+        ],
       },
     ],
   },
