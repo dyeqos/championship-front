@@ -1,13 +1,17 @@
 import { use } from "react";
 import { ButtonToggleContext } from "@/frames/context/ButtonToggleContext";
-import { Home, Trophy, Users, Calendar, Target } from "lucide-react";
+import { Home, Trophy, Users } from "lucide-react";
+import { Link } from "react-router";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: Home, current: true },
-  { name: "Championships", href: "#", icon: Trophy, current: false },
-  { name: "Teams", href: "#", icon: Users, current: false },
-  { name: "Fixtures", href: "#", icon: Calendar, current: false },
-  { name: "Top Scorers", href: "#", icon: Target, current: false },
+  { name: "Dashboard", href: "/", icon: Home, current: true },
+  {
+    name: "Championships",
+    href: "/championship",
+    icon: Trophy,
+    current: false,
+  },
+  { name: "Parametros", href: "/params", icon: Users, current: false },
 ];
 export const SideBarComponent = () => {
   const { isOpenToggle, setOpenToggle } = use(ButtonToggleContext);
@@ -24,9 +28,9 @@ export const SideBarComponent = () => {
         <div className="flex flex-col h-full pt-5 pb-4 overflow-y-auto">
           <nav className=" flex-1 px-2 space-y-1">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className={`${
                   item.current
                     ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -41,7 +45,7 @@ export const SideBarComponent = () => {
                   } mr-3 flex-shrink-0 h-5 w-5`}
                 />
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
         </div>

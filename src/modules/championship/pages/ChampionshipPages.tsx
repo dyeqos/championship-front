@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { mockChampionships } from "../mock/mockData";
 import { PanelCard } from "@/components/customs/PanelCard";
 import { ChampionshipMotionComponent } from "../components/championships/ChampionshipMotionComponent";
+import { TittleComponent } from "@/components/customs/TittleComponent";
 
 export const ChampionshipPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,20 +28,15 @@ export const ChampionshipPage = () => {
   return (
     <div className="space-y-6">
       {/* Header with Create Button */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Campeonatos
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Gestiona todos los campeonatos de fútbol
-          </p>
-        </div>
+      <TittleComponent
+        title="Campeonatos"
+        subtitle="Gestiona todos los campeonatos de fútbol"
+      >
         <Button className="flex items-center space-x-2">
           <Plus size={20} />
           <span>Crear Nuevo Campeonato</span>
         </Button>
-      </div>
+      </TittleComponent>
 
       {/* Filters */}
       <PanelCard>
