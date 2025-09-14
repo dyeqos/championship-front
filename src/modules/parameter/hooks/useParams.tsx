@@ -3,7 +3,7 @@ import { getParamDomain } from "../actions/getParamDomain.action";
 
 export const useParams = () => {
   return useQuery({
-    queryKey: ["params", "domain"],
+    queryKey: ["params", "domains"],
     queryFn: getParamDomain,
   });
 };

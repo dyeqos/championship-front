@@ -14,25 +14,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { ValueDescription } from "@/interfaces/GlobalInterface";
 
-type Option = {
-  label: string;
-  value: string;
-};
-
-type FloatingSelectInnerProps = {
+type MaterialSelectProps = {
   field: ControllerRenderProps<FieldValues, string>;
   fieldState: ControllerFieldState;
   label: string;
-  options: Option[];
+  options: ValueDescription[];
 };
 
-function FloatingSelectInner({
+const MaterialSelect = ({
   field,
   fieldState,
   label,
   options,
-}: Readonly<FloatingSelectInnerProps>) {
+}: Readonly<MaterialSelectProps>) => {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = !!field.value;
 
@@ -68,8 +64,8 @@ function FloatingSelectInner({
 
         <SelectContent>
           {options.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
+            <SelectItem key={opt.value} value={opt.value.toString()}>
+              {opt.description}
             </SelectItem>
           ))}
         </SelectContent>
@@ -80,14 +76,14 @@ function FloatingSelectInner({
       )}
     </div>
   );
-}
+};
 
-type FloatingSelectProps = {
+type ControllerSelectProps = {
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
   label: string;
-  options: Option[];
+  options: ValueDescription[];
   rules?: Omit<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     RegisterOptions<any, string>,
@@ -95,20 +91,20 @@ type FloatingSelectProps = {
   >;
 };
 
-export function SelectComponent({
+export const SelectComponent = ({
   name,
   control,
   label,
   options,
   rules,
-}: Readonly<FloatingSelectProps>) {
+}: Readonly<ControllerSelectProps>) => {
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
       render={({ field, fieldState }) => (
-        <FloatingSelectInner
+        <MaterialSelect
           field={field}
           fieldState={fieldState}
           label={label}
@@ -117,4 +113,4 @@ export function SelectComponent({
       )}
     />
   );
-}
+};

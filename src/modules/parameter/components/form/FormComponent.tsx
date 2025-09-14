@@ -37,11 +37,7 @@ export const FormComponent = () => {
                 name="domain"
                 control={control}
                 label="País"
-                options={[
-                  { label: "Bolivia", value: "bo" },
-                  { label: "Argentina", value: "ar" },
-                  { label: "Chile", value: "cl" },
-                ]}
+                options={data ?? []}
                 rules={{ required: "El país es obligatorio" }}
               />
             </div>
