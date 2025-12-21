@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router";
 import { MainLayout } from "@/frames/layouts/MainLayout";
-import { DashboardLayout } from "@/modules/dashboard/layout/DashboardLayout";
-import { DashboardPages } from "@/modules/dashboard/pages/DashboardPages";
-import { ChampionshipLayout } from "@/modules/championship/layouts/ChampionshipLayout";
-import { ChampionshipPage } from "@/modules/championship/pages/ChampionshipPages";
-import { ParamLayout } from "@/modules/parameter/Layouts/ParamLayout";
-import { ParamPage } from "@/modules/parameter/pages/ParamPage";
+import { ExamplePage } from "@/modules/examples/pages/ExamplePage";
+// import { DashboardLayout } from "@/modules/dashboard/layout/DashboardLayout";
+// import { DashboardPages } from "@/modules/dashboard/pages/DashboardPages";
+// import { ChampionshipLayout } from "@/modules/championship/layouts/ChampionshipLayout";
+// import { ChampionshipPage } from "@/modules/championship/pages/ChampionshipPages";
+// import { ParamLayout } from "@/modules/parameter/Layouts/ParamLayout";
+// import { ParamPage } from "@/modules/parameter/pages/ParamPage";
 
 export const MainRouter = createBrowserRouter([
   {
@@ -13,34 +14,29 @@ export const MainRouter = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        element: <DashboardLayout />,
-        children: [
-          {
-            index: true,
-            element: <DashboardPages />,
-          },
-        ],
+        index: true,
+        element: <ExamplePage />,
       },
-      {
-        path: "championship",
-        element: <ChampionshipLayout />,
-        children: [
-          {
-            index: true,
-            element: <ChampionshipPage />,
-          },
-        ],
-      },
-      {
-        path: "params",
-        element: <ParamLayout />,
-        children: [
-          {
-            index: true,
-            element: <ParamPage />,
-          },
-        ],
-      },
+      // {
+      //   path: "championship",
+      //   element: <ChampionshipLayout />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <ChampionshipPage />,
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: "params",
+      //   element: <ParamLayout />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <ParamPage />,
+      //     },
+      //   ],
+      // },
     ],
   },
   {
