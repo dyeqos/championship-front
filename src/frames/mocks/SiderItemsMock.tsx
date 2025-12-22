@@ -5,23 +5,28 @@ import {
   Grid,
   Home,
   Layers,
+  Settings,
   Users,
 } from "lucide-react";
+import type { SidebarItem } from "../interfaces/SidebarItemInterface";
 // Sample data for sidebar navigation
-export const sidebarItems = [
+export const sidebarItems: SidebarItem[] = [
   {
     title: "Home",
     icon: <Home />,
     isActive: true,
   },
   {
+    title: "Parámetros",
+    icon: <Settings />,
+  },
+  {
     title: "Apps",
     icon: <Grid />,
-    badge: "2",
     items: [
       { title: "All Apps", url: "#" },
       { title: "Recent", url: "#" },
-      { title: "Updates", url: "#", badge: "2" },
+      { title: "Updates", url: "#" },
       { title: "Installed", url: "#" },
     ],
   },
@@ -30,7 +35,7 @@ export const sidebarItems = [
     icon: <FileText />,
     items: [
       { title: "Recent", url: "#" },
-      { title: "Shared with me", url: "#", badge: "3" },
+      { title: "Shared with me", url: "#" },
       { title: "Favorites", url: "#" },
       { title: "Trash", url: "#" },
     ],
@@ -38,9 +43,8 @@ export const sidebarItems = [
   {
     title: "Projects",
     icon: <Layers />,
-    badge: "4",
     items: [
-      { title: "Active Projects", url: "#", badge: "4" },
+      { title: "Active Projects", url: "#" },
       { title: "Archived", url: "#" },
       { title: "Templates", url: "#" },
     ],
