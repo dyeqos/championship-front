@@ -19,12 +19,13 @@ export const sidebarItems: SidebarItem[] = [
   {
     title: "Parámetros",
     icon: <Settings />,
+    url: "/parameters",
   },
   {
     title: "Apps",
     icon: <Grid />,
     items: [
-      { title: "All Apps", url: "#" },
+      { title: "All Apps", url: "/parameters" },
       { title: "Recent", url: "#" },
       { title: "Updates", url: "#" },
       { title: "Installed", url: "#" },
