@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,153 +13,77 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Pencil, Plus, AlertCircle } from "lucide-react";
-import { useState } from "react";
-
-interface Parameter {
-  id: string;
-  domain: string;
-  name: string;
-  value: string;
-  description: string;
-  active: boolean;
-}
+import { loadingStore } from "@/platform/store/LoadingStore";
+import { parameterStore } from "../../store/ParameterStore";
+import { useCreateParameter } from "../../hooks/useCreateParams";
+import { useUpdateParameter } from "../../hooks/useUpdateParams";
+import { useParameter } from "../../hooks/useParams";
 
 export const FormComponent = () => {
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    domain: "",
-    name: "",
-    value: "",
-    description: "",
-    active: true,
-  });
+  const storeLoading = loadingStore();
+  const store = parameterStore();
+  const parameter = parameterStore((state) => state.parameter);
+  const { createParameter } = useCreateParameter();
+  const { updateParameter } = useUpdateParameter();
+  const { paramListQuery } = useParameter();
+
   const [errors, setErrors] = useState({
     domain: false,
     name: false,
-    value: false,
   });
 
-  const DOMAINS = [
-    "Countries",
-    "States",
-    "Cities",
-    "Document Types",
-    "Statuses",
-  ];
+  const DOMAINS = ["CHAMPIONSHIP"];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    storeLoading.setActive(true);
 
     if (!validateForm()) {
+      storeLoading.setActive(false);
       return;
     }
-
-    if (editingId) {
-      // Edit existing parameter
-      setParameters(
-        parameters.map((param) =>
-          param.id === editingId ? { ...formData, id: editingId } : param
-        )
-      );
-      setEditingId(null);
+    let isSuccess: boolean = false;
+    if (parameter.id) {
+      isSuccess = await updateParameter(parameter.id, parameter);
     } else {
-      // Add new parameter
-      const newParameter: Parameter = {
-        id: Date.now().toString(),
-        ...formData,
-      };
-      setParameters([...parameters, newParameter]);
+      isSuccess = await createParameter(parameter);
     }
-
-    // Reset form
-    setFormData({
-      domain: "",
-      name: "",
-      value: "",
-      description: "",
-      active: true,
-    });
-    setErrors({ domain: false, name: false, value: false });
+    if (isSuccess) {
+      paramListQuery.refetch();
+      // Reset form
+      store.clearFormParam();
+      setErrors({ domain: false, name: false });
+    }
+    storeLoading.setActive(false);
   };
 
   const validateForm = () => {
     const newErrors = {
-      domain: !formData.domain,
-      name: !formData.name,
-      value: !formData.value,
+      domain: !parameter.domain,
+      name: !parameter.name,
     };
     setErrors(newErrors);
-    return !Object.values(newErrors).some((error) => error);
+    return !Object.values(newErrors).some(Boolean);
   };
 
-  const [parameters, setParameters] = useState<Parameter[]>([
-    {
-      id: "1",
-      domain: "Countries",
-      name: "USA",
-      value: "US",
-      description: "United States of America",
-      active: true,
-    },
-    {
-      id: "2",
-      domain: "Countries",
-      name: "Canada",
-      value: "CA",
-      description: "Canada",
-      active: true,
-    },
-    {
-      id: "3",
-      domain: "Document Types",
-      name: "Passport",
-      value: "PASSPORT",
-      description: "International travel document",
-      active: true,
-    },
-    {
-      id: "4",
-      domain: "Document Types",
-      name: "Driver License",
-      value: "DL",
-      description: "State-issued driving permit",
-      active: true,
-    },
-    {
-      id: "5",
-      domain: "Statuses",
-      name: "Active",
-      value: "ACTIVE",
-      description: "Currently active status",
-      active: true,
-    },
-  ]);
-
   const handleCancel = () => {
-    setEditingId(null);
-    setFormData({
-      domain: "",
-      name: "",
-      value: "",
-      description: "",
-      active: true,
-    });
-    setErrors({ domain: false, name: false, value: false });
+    store.clearFormParam();
+    setErrors({ domain: false, name: false });
   };
 
   return (
     <Card className="shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          {editingId ? (
+          {parameter.id ? (
             <>
               <Pencil className="h-5 w-5" />
-              Edit Parameter
+              Editar Parámetro
             </>
           ) : (
             <>
               <Plus className="h-5 w-5" />
-              Create New Parameter
+              Crear Nuevo Parámetro
             </>
           )}
         </CardTitle>
@@ -169,12 +94,12 @@ export const FormComponent = () => {
             {/* Domain Select */}
             <div className="space-y-2">
               <Label htmlFor="domain" className="text-sm font-medium">
-                Domain <span className="text-destructive">*</span>
+                Dominio <span className="text-destructive">*</span>
               </Label>
               <Select
-                value={formData.domain}
+                value={parameter.domain}
                 onValueChange={(value) => {
-                  setFormData({ ...formData, domain: value });
+                  store.setFormParam({ ...parameter, domain: value });
                   setErrors({ ...errors, domain: false });
                 }}
               >
@@ -194,22 +119,22 @@ export const FormComponent = () => {
               {errors.domain && (
                 <div className="flex items-center gap-1 text-destructive text-xs">
                   <AlertCircle className="h-3 w-3" />
-                  <span>Domain is required</span>
+                  <span>Dominio es requerido</span>
                 </div>
               )}
             </div>
 
-            {/* Parameter Name */}
+            {/* Parámetro Name */}
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium">
-                Parameter Name <span className="text-destructive">*</span>
+                Parámetro Nombre <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="name"
                 placeholder="e.g., United States"
-                value={formData.name}
+                value={parameter.name}
                 onChange={(e) => {
-                  setFormData({ ...formData, name: e.target.value });
+                  store.setFormParam({ ...parameter, name: e.target.value });
                   setErrors({ ...errors, name: false });
                 }}
                 className={errors.name ? "border-destructive" : ""}
@@ -217,30 +142,7 @@ export const FormComponent = () => {
               {errors.name && (
                 <div className="flex items-center gap-1 text-destructive text-xs">
                   <AlertCircle className="h-3 w-3" />
-                  <span>Parameter name is required</span>
-                </div>
-              )}
-            </div>
-
-            {/* Parameter Value */}
-            <div className="space-y-2">
-              <Label htmlFor="value" className="text-sm font-medium">
-                Parameter Value <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="value"
-                placeholder="e.g., US"
-                value={formData.value}
-                onChange={(e) => {
-                  setFormData({ ...formData, value: e.target.value });
-                  setErrors({ ...errors, value: false });
-                }}
-                className={errors.value ? "border-destructive" : ""}
-              />
-              {errors.value && (
-                <div className="flex items-center gap-1 text-destructive text-xs">
-                  <AlertCircle className="h-3 w-3" />
-                  <span>Parameter value is required</span>
+                  <span>Parámetro nombre es requerido</span>
                 </div>
               )}
             </div>
@@ -253,13 +155,13 @@ export const FormComponent = () => {
               <div className="flex items-center space-x-2 h-10">
                 <Switch
                   id="active"
-                  checked={formData.active}
+                  checked={parameter.isActive}
                   onCheckedChange={(checked) =>
-                    setFormData({ ...formData, active: checked })
+                    store.setFormParam({ ...parameter, isActive: checked })
                   }
                 />
                 <span className="text-sm text-muted-foreground">
-                  {formData.active ? "Active" : "Inactive"}
+                  {parameter.isActive ? "Active" : "Inactive"}
                 </span>
               </div>
             </div>
@@ -268,15 +170,18 @@ export const FormComponent = () => {
           {/* Description */}
           <div className="space-y-2">
             <Label htmlFor="description" className="text-sm font-medium">
-              Description{" "}
+              Descripción{" "}
               <span className="text-muted-foreground text-xs">(Optional)</span>
             </Label>
             <Textarea
               id="description"
               placeholder="Enter a description for this parameter..."
-              value={formData.description}
+              value={parameter.description}
               onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
+                store.setFormParam({
+                  ...parameter,
+                  description: e.target.value,
+                })
               }
               rows={3}
             />
@@ -285,21 +190,21 @@ export const FormComponent = () => {
           {/* Form Actions */}
           <div className="flex gap-2">
             <Button type="submit" className="flex-1 md:flex-none">
-              {editingId ? (
+              {parameter.id ? (
                 <>
                   <Pencil className="h-4 w-4 mr-2" />
-                  Update Parameter
+                  Actualizar Parámetro
                 </>
               ) : (
                 <>
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Parameter
+                  Crear Parámetro
                 </>
               )}
             </Button>
-            {editingId && (
+            {parameter.id && (
               <Button type="button" variant="outline" onClick={handleCancel}>
-                Cancel
+                Cancelar
               </Button>
             )}
           </div>

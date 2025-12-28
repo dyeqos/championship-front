@@ -5,11 +5,12 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@/frames": ["./src/frames/*"],
-      "@/modules": ["./src/modules/*"],
+      "@/modules": ["./src/modules/*"]
     }
   }
 }

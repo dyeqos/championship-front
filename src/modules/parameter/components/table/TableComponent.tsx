@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -11,49 +11,38 @@ import {
   Table,
 } from "@/components/ui/table";
 import { Settings, Pencil, Trash2 } from "lucide-react";
+import { loadingStore } from "@/platform/store/LoadingStore";
+import { parameterStore } from "../../store/ParameterStore";
+import { ConfirmComponent } from "@/components/customs/confirm/ConfirmComponent";
 import { useParameter } from "../../hooks/useParams";
+import { useDeleteParameter } from "../../hooks/useDeleteParams";
 import type { ParameterResponse } from "../../interfaces/ParameterResponseInterface";
 
 export const TableComponent = () => {
+  const { setFormParam } = parameterStore();
+  const { setActive } = loadingStore();
   const { paramListQuery } = useParameter();
-  console.log(paramListQuery.data);
+  const { deleteParameter } = useDeleteParameter();
+
+  useEffect(() => {
+    paramListQuery.refetch();
+  }, [paramListQuery]);
 
   const handleEdit = (parameter: ParameterResponse) => {
-    setFormData({
+    setFormParam({
+      id: parameter.id,
       domain: parameter.domain,
       name: parameter.name,
       description: parameter.description,
       isActive: parameter.isActive,
     });
-    setEditingId(parameter.id);
-    setErrors({ domain: false, name: false, value: false });
   };
 
-  const [errors, setErrors] = useState({
-    domain: false,
-    name: false,
-    value: false,
-  });
-
-  const [editingId, setEditingId] = useState<string | null>(null);
-
-  const [formData, setFormData] = useState({
-    domain: "",
-    name: "",
-    description: "",
-    isActive: true,
-  });
-
-  const handleDelete = (id: string) => {
-    if (editingId === id) {
-      setEditingId(null);
-      setFormData({
-        domain: "",
-        name: "",
-        description: "",
-        isActive: true,
-      });
-    }
+  const handleDelete = async (id: string) => {
+    setActive(true);
+    await deleteParameter(id);
+    await paramListQuery.refetch();
+    setActive(false);
   };
 
   return (
@@ -67,7 +56,8 @@ export const TableComponent = () => {
             <Settings className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">Sin Parámetros</h3>
             <p className="text-muted-foreground max-w-md">
-              Start by adding your first parameter using the form above.
+              Comience agregando su primer parámetro utilizando el formulario de
+              arriba.
             </p>
           </div>
         ) : (
@@ -78,7 +68,7 @@ export const TableComponent = () => {
                   <TableHead>Dominio</TableHead>
                   <TableHead>Nombre</TableHead>
                   <TableHead>Estado</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
+                  <TableHead className="text-center">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -101,7 +91,7 @@ export const TableComponent = () => {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex justify-center gap-2">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -110,14 +100,22 @@ export const TableComponent = () => {
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(parameter.id)}
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <ConfirmComponent
+                          title="Borrar Parámetro"
+                          description={`¿Estas seguro de borrar el parámetro ${parameter.name}?`}
+                          confirmText="Borrar"
+                          destructive
+                          onConfirm={() => handleDelete(parameter.id)}
+                          trigger={
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
                       </div>
                     </TableCell>
                   </TableRow>
