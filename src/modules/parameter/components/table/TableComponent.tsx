@@ -12,14 +12,18 @@ import {
 } from "@/components/ui/table";
 import { Settings, Pencil, Trash2 } from "lucide-react";
 import { loadingStore } from "@/platform/store/LoadingStore";
-import { parameterStore } from "../../store/ParameterStore";
+
 import { ConfirmComponent } from "@/components/customs/confirm/ConfirmComponent";
 import { useParameter } from "../../hooks/useParams";
 import { useDeleteParameter } from "../../hooks/useDeleteParams";
-import type { ParameterResponse } from "../../interfaces/ParameterResponseInterface";
 
-export const TableComponent = () => {
-  const { setFormParam } = parameterStore();
+import type { ParameterRequest } from "../../interfaces/ParameterRequestInterface";
+
+type Props = {
+  onEdit: (row: ParameterRequest) => void;
+};
+
+export const TableComponent = ({ onEdit }: Props) => {
   const { setActive } = loadingStore();
   const { paramListQuery } = useParameter();
   const { deleteParameter } = useDeleteParameter();
@@ -27,16 +31,6 @@ export const TableComponent = () => {
   useEffect(() => {
     paramListQuery.refetch();
   }, [paramListQuery]);
-
-  const handleEdit = (parameter: ParameterResponse) => {
-    setFormParam({
-      id: parameter.id,
-      domain: parameter.domain,
-      name: parameter.name,
-      description: parameter.description,
-      isActive: parameter.isActive,
-    });
-  };
 
   const handleDelete = async (id: string) => {
     setActive(true);
@@ -95,7 +89,7 @@ export const TableComponent = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleEdit(parameter)}
+                          onClick={() => onEdit(parameter)}
                           className="h-8 w-8 p-0"
                         >
                           <Pencil className="h-4 w-4" />

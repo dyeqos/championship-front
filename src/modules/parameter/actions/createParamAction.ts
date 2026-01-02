@@ -3,10 +3,5 @@ import type { ParameterResponse } from "../interfaces/ParameterResponseInterface
 import type { ParameterRequest } from "../interfaces/ParameterRequestInterface";
 
 export const createParamAction = async (parameter: ParameterRequest) => {
-  const { data } = await ApiConnection.post<ParameterResponse[]>(
-    "/parameters",
-    parameter
-  );
-
-  return data;
+  return ApiConnection.post<ParameterResponse[]>("/parameters", parameter);
 };

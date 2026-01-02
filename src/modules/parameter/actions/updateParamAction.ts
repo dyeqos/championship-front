@@ -6,10 +6,5 @@ export const updateParamAction = async (
   id: string,
   parameter: ParameterRequest
 ) => {
-  const { data } = await ApiConnection.patch<ParameterResponse>(
-    `/parameters/${id}`,
-    parameter
-  );
-
-  return data;
+  return ApiConnection.patch<ParameterResponse>(`/parameters/${id}`, parameter);
 };

@@ -1,7 +1,7 @@
 export interface ParameterRequest {
   id: string | null;
-  domain: string;
-  name: string;
-  description: string;
+  domain: string | null;
+  name: string | null;
+  description: string | null;
   isActive: boolean;
 }

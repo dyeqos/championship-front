@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,69 +13,40 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Pencil, Plus, AlertCircle } from "lucide-react";
-import { loadingStore } from "@/platform/store/LoadingStore";
-import { parameterStore } from "../../store/ParameterStore";
-import { useCreateParameter } from "../../hooks/useCreateParams";
-import { useUpdateParameter } from "../../hooks/useUpdateParams";
-import { useParameter } from "../../hooks/useParams";
+import type { ParameterRequest } from "../../interfaces/ParameterRequestInterface";
 
-export const FormComponent = () => {
-  const storeLoading = loadingStore();
-  const store = parameterStore();
-  const parameter = parameterStore((state) => state.parameter);
-  const { createParameter } = useCreateParameter();
-  const { updateParameter } = useUpdateParameter();
-  const { paramListQuery } = useParameter();
+const DOMAINS = ["CHAMPIONSHIP"];
 
-  const [errors, setErrors] = useState({
-    domain: false,
-    name: false,
-  });
+interface Props {
+  form: UseFormReturn<ParameterRequest>;
+  onSubmit: (data: ParameterRequest) => void;
+}
 
-  const DOMAINS = ["CHAMPIONSHIP"];
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    storeLoading.setActive(true);
-
-    if (!validateForm()) {
-      storeLoading.setActive(false);
-      return;
-    }
-    let isSuccess: boolean = false;
-    if (parameter.id) {
-      isSuccess = await updateParameter(parameter.id, parameter);
-    } else {
-      isSuccess = await createParameter(parameter);
-    }
-    if (isSuccess) {
-      paramListQuery.refetch();
-      // Reset form
-      store.clearFormParam();
-      setErrors({ domain: false, name: false });
-    }
-    storeLoading.setActive(false);
-  };
-
-  const validateForm = () => {
-    const newErrors = {
-      domain: !parameter.domain,
-      name: !parameter.name,
-    };
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(Boolean);
-  };
+export const FormComponent = ({ form, onSubmit }: Props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    getValues,
+    reset,
+  } = form;
 
   const handleCancel = () => {
-    store.clearFormParam();
-    setErrors({ domain: false, name: false });
+    reset({
+      description: null,
+      domain: null,
+      id: null,
+      isActive: false,
+      name: null,
+    });
   };
 
   return (
     <Card className="shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          {parameter.id ? (
+          {getValues("id") ? (
             <>
               <Pencil className="h-5 w-5" />
               Editar Parámetro
@@ -89,37 +60,43 @@ export const FormComponent = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Domain Select */}
             <div className="space-y-2">
               <Label htmlFor="domain" className="text-sm font-medium">
                 Dominio <span className="text-destructive">*</span>
               </Label>
-              <Select
-                value={parameter.domain}
-                onValueChange={(value) => {
-                  store.setFormParam({ ...parameter, domain: value });
-                  setErrors({ ...errors, domain: false });
-                }}
-              >
-                <SelectTrigger
-                  className={errors.domain ? "border-destructive" : ""}
-                >
-                  <SelectValue placeholder="Select a domain..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {DOMAINS.map((domain) => (
-                    <SelectItem key={domain} value={domain}>
-                      {domain}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Controller
+                name="domain"
+                control={control}
+                rules={{ required: "El campo dominio es obligatorio" }}
+                render={({ field }) => (
+                  <Select
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      className={errors.domain ? "border-destructive" : ""}
+                    >
+                      <SelectValue placeholder="Select a domain..." />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {DOMAINS.map((domain) => (
+                        <SelectItem key={domain} value={domain}>
+                          {domain}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
               {errors.domain && (
                 <div className="flex items-center gap-1 text-destructive text-xs">
                   <AlertCircle className="h-3 w-3" />
-                  <span>Dominio es requerido</span>
+                  <span>{errors.domain.message ?? "Error en el campo"}</span>
                 </div>
               )}
             </div>
@@ -132,17 +109,19 @@ export const FormComponent = () => {
               <Input
                 id="name"
                 placeholder="e.g., United States"
-                value={parameter.name}
-                onChange={(e) => {
-                  store.setFormParam({ ...parameter, name: e.target.value });
-                  setErrors({ ...errors, name: false });
-                }}
+                {...register("name", {
+                  required: "El nombre es requerido",
+                  minLength: {
+                    value: 3,
+                    message: "El nombre no debe ser menor a 3 caracteres",
+                  },
+                })}
                 className={errors.name ? "border-destructive" : ""}
               />
               {errors.name && (
                 <div className="flex items-center gap-1 text-destructive text-xs">
                   <AlertCircle className="h-3 w-3" />
-                  <span>Parámetro nombre es requerido</span>
+                  <span>{errors.name.message}</span>
                 </div>
               )}
             </div>
@@ -150,19 +129,25 @@ export const FormComponent = () => {
             {/* Active Toggle */}
             <div className="space-y-2">
               <Label htmlFor="active" className="text-sm font-medium">
-                Active Status
+                ¿Parámetro activo?
               </Label>
               <div className="flex items-center space-x-2 h-10">
-                <Switch
-                  id="active"
-                  checked={parameter.isActive}
-                  onCheckedChange={(checked) =>
-                    store.setFormParam({ ...parameter, isActive: checked })
-                  }
+                <Controller
+                  name="isActive"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Switch
+                        id="active"
+                        checked={!!field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <span className="text-sm text-muted-foreground">
+                        {field.value ? "Activo" : "Inactivo"}
+                      </span>
+                    </>
+                  )}
                 />
-                <span className="text-sm text-muted-foreground">
-                  {parameter.isActive ? "Active" : "Inactive"}
-                </span>
               </div>
             </div>
           </div>
@@ -170,27 +155,32 @@ export const FormComponent = () => {
           {/* Description */}
           <div className="space-y-2">
             <Label htmlFor="description" className="text-sm font-medium">
-              Descripción{" "}
-              <span className="text-muted-foreground text-xs">(Optional)</span>
+              Descripción <span className="text-destructive">*</span>
             </Label>
             <Textarea
               id="description"
               placeholder="Enter a description for this parameter..."
-              value={parameter.description}
-              onChange={(e) =>
-                store.setFormParam({
-                  ...parameter,
-                  description: e.target.value,
-                })
-              }
+              {...register("description", {
+                required: "La descripción es obligatorio",
+                minLength: {
+                  value: 3,
+                  message: "La descripción no debe ser menor a 3 caracteres",
+                },
+              })}
               rows={3}
             />
+            {errors.description && (
+              <div className="flex items-center gap-1 text-destructive text-xs">
+                <AlertCircle className="h-3 w-3" />
+                <span>{errors.description.message}</span>
+              </div>
+            )}
           </div>
 
           {/* Form Actions */}
           <div className="flex gap-2">
             <Button type="submit" className="flex-1 md:flex-none">
-              {parameter.id ? (
+              {getValues("id") ? (
                 <>
                   <Pencil className="h-4 w-4 mr-2" />
                   Actualizar Parámetro
@@ -202,7 +192,7 @@ export const FormComponent = () => {
                 </>
               )}
             </Button>
-            {parameter.id && (
+            {getValues("id") && (
               <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancelar
               </Button>
