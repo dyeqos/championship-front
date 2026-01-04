@@ -3,19 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Pencil, Plus, AlertCircle } from "lucide-react";
 import type { ParameterRequest } from "../../interfaces/ParameterRequestInterface";
-
-const DOMAINS = ["CHAMPIONSHIP"];
+import { SelectComponent } from "@/components/customs/select/SelectComponent";
 
 interface Props {
   form: UseFormReturn<ParameterRequest>;
@@ -64,41 +56,16 @@ export const FormComponent = ({ form, onSubmit }: Props) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Domain Select */}
             <div className="space-y-2">
-              <Label htmlFor="domain" className="text-sm font-medium">
-                Dominio <span className="text-destructive">*</span>
-              </Label>
-              <Controller
+              <SelectComponent
+                form={form}
+                label="Dominio"
                 name="domain"
-                control={control}
-                rules={{ required: "El campo dominio es obligatorio" }}
-                render={({ field }) => (
-                  <Select
-                    value={field.value ?? ""}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      className={errors.domain ? "border-destructive" : ""}
-                    >
-                      <SelectValue placeholder="Select a domain..." />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      {DOMAINS.map((domain) => (
-                        <SelectItem key={domain} value={domain}>
-                          {domain}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+                placeholder="Seleccione el dominio"
+                options={[
+                  { value: "CHAMPIONSHIP", description: "CHAMPIONSHIP" },
+                ]}
+                isRequired
               />
-
-              {errors.domain && (
-                <div className="flex items-center gap-1 text-destructive text-xs">
-                  <AlertCircle className="h-3 w-3" />
-                  <span>{errors.domain.message ?? "Error en el campo"}</span>
-                </div>
-              )}
             </div>
 
             {/* Parámetro Name */}
