@@ -33,7 +33,6 @@ export const SelectComponent = <T extends FieldValues>(props: Props<T>) => {
     formState: { errors },
   } = form;
   const error = get<FieldErrors<T>>(errors, name);
-  console.log(error);
   return (
     <>
       <Label htmlFor={name.toString()} className="text-sm font-medium">

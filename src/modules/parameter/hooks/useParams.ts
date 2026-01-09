@@ -1,6 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { getParamDomainAction } from "../actions/getParamDomainAction";
 import { getParamListAction } from "../actions/getParamListAction";
+import { createUpdateParamAction } from "../actions/createUpdateParamAction";
 
 const PARAMETERS = "parameters";
 const DOMAINS = "domains";
@@ -18,12 +20,18 @@ export const useParameter = () => {
     queryFn: getParamDomainAction,
   });
 
-  const refreshAllParams = () => {
-    queryClient.invalidateQueries({ queryKey: [PARAMETERS] });
-  };
+  const mutation = useMutation({
+    mutationFn: createUpdateParamAction,
+    onSuccess: (_, variables) => {
+      const { id } = variables;
+      toast(`Parámetro ${id ? "Actualizado" : "Creado"}`);
+      queryClient.invalidateQueries({ queryKey: [PARAMETERS] });
+    },
+  });
+
   return {
     paramListQuery,
     paramDomainQuery,
-    refreshAllParams,
+    mutation,
   };
 };
