@@ -1,4 +1,4 @@
-export interface ParameterRequest {
+export interface Parameter {
   id: string | null;
   domain: string | null;
   name: string | null;

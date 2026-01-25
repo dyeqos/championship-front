@@ -3,16 +3,16 @@ import { loadingStore } from "@/platform/store/LoadingStore";
 import { FormComponent } from "../components/form/FormComponent";
 import { TableComponent } from "../components/table/TableComponent";
 import { useParameter } from "../hooks/useParams";
-import type { ParameterRequest } from "../interfaces/ParameterRequestInterface";
+import type { Parameter } from "@/platform/interfaces/ParameterInterface";
 
 export default function ParameterPage() {
   const storeLoading = loadingStore();
   const { mutation } = useParameter();
-  const form = useForm<ParameterRequest>();
+  const form = useForm<Parameter>();
 
-  const onEdit = (row: ParameterRequest) => form.reset({ ...row });
+  const onEdit = (row: Parameter) => form.reset({ ...row });
 
-  const saveParameter = async (data: ParameterRequest) => {
+  const saveParameter = async (data: Parameter) => {
     storeLoading.setActive(true);
     await mutation.mutateAsync(data, {
       onSuccess: () => {

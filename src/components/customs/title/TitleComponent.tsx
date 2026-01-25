@@ -6,12 +6,12 @@ interface Props {
 }
 export const TitleComponent = ({ title, icon }: Props) => {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center mb-2 gap-3">
       {isValidElement(icon) &&
         cloneElement(icon, {
-          className: "h-7 w-7 text-primary",
+          className: "h-5 w-5 text-primary",
         })}
-      <h1 className="text-3xl font-bold">{title}</h1>
+      <h1 className="text-xl font-semibold mb-1">{title}</h1>
     </div>
   );
 };

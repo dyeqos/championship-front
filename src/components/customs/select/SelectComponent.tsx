@@ -14,12 +14,12 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import type { ValueDescription } from "@/frames/interfaces/ValueDescriptionInterface";
 import { AlertCircle } from "lucide-react";
+import type { ValueDescription } from "@/frames/interfaces/ValueDescriptionInterface";
 
 interface Props<T extends FieldValues> {
   form: UseFormReturn<T>;
-  label: string;
+  label?: string;
   name: Path<T>;
   options: ValueDescription[];
   isRequired?: boolean;
@@ -34,10 +34,15 @@ export const SelectComponent = <T extends FieldValues>(props: Props<T>) => {
   } = form;
   const error = get<FieldErrors<T>>(errors, name);
   return (
-    <>
-      <Label htmlFor={name.toString()} className="text-sm font-medium">
-        {label} <span className="text-destructive">*</span>
-      </Label>
+    <div className="space-y-2">
+      {label && (
+        <Label
+          htmlFor={name.toString()}
+          className="text-sm font-medium bottom-2"
+        >
+          {label} <span className="text-destructive">*</span>
+        </Label>
+      )}
       <Controller
         name={name}
         control={control}
@@ -46,7 +51,9 @@ export const SelectComponent = <T extends FieldValues>(props: Props<T>) => {
         }}
         render={({ field }) => (
           <Select value={field.value ?? ""} onValueChange={field.onChange}>
-            <SelectTrigger className={error ? "border-destructive" : ""}>
+            <SelectTrigger
+              className={`w-full ${error ? "border-destructive" : ""}`}
+            >
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
 
@@ -66,6 +73,6 @@ export const SelectComponent = <T extends FieldValues>(props: Props<T>) => {
           <span>{error.message ?? "Error en el campo"}</span>
         </div>
       )}
-    </>
+    </div>
   );
 };

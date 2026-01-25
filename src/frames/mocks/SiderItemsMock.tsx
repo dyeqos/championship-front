@@ -6,6 +6,7 @@ import {
   Home,
   Layers,
   Settings,
+  Trophy,
   Users,
 } from "lucide-react";
 import type { SidebarItem } from "../interfaces/SidebarItemInterface";
@@ -15,6 +16,11 @@ export const sidebarItems: SidebarItem[] = [
     title: "Home",
     icon: <Home />,
     isActive: true,
+  },
+  {
+    title: "Campeonatos",
+    icon: <Trophy />,
+    url: "/championship",
   },
   {
     title: "Parámetros",

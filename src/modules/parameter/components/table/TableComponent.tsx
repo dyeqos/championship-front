@@ -17,10 +17,10 @@ import { ConfirmComponent } from "@/components/customs/confirm/ConfirmComponent"
 import { useParameter } from "../../hooks/useParams";
 import { useDeleteParameter } from "../../hooks/useDeleteParams";
 
-import type { ParameterRequest } from "../../interfaces/ParameterRequestInterface";
+import type { Parameter } from "@/platform/interfaces/ParameterInterface";
 
 type Props = {
-  onEdit: (row: ParameterRequest) => void;
+  onEdit: (row: Parameter) => void;
 };
 
 export const TableComponent = ({ onEdit }: Props) => {
@@ -94,22 +94,24 @@ export const TableComponent = ({ onEdit }: Props) => {
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <ConfirmComponent
-                          title="Borrar Parámetro"
-                          description={`¿Estas seguro de borrar el parámetro ${parameter.name}?`}
-                          confirmText="Borrar"
-                          destructive
-                          onConfirm={() => handleDelete(parameter.id)}
-                          trigger={
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          }
-                        />
+                        {parameter.id && (
+                          <ConfirmComponent
+                            title="Borrar Parámetro"
+                            description={`¿Estas seguro de borrar el parámetro ${parameter.name}?`}
+                            confirmText="Borrar"
+                            destructive
+                            onConfirm={() => handleDelete(parameter.id!)}
+                            trigger={
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            }
+                          />
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

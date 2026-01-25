@@ -1,9 +1,13 @@
+import type { Parameter } from "@/platform/interfaces/ParameterInterface";
+
 export interface Championship {
   id: string;
-  name: string;
-  category: string;
-  status: string;
-  startDate: string;
-  teamsCount: number;
-  progress: number;
+  category: Parameter;
+  gender: number;
+  management: number;
+  name: Parameter;
+  state: number;
+  version: number;
+  teamsCount?: number;
+  progress?: number;
 }

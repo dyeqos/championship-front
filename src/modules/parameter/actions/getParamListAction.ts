@@ -1,6 +1,6 @@
 import { ApiConnection } from "@/platform/connections/ApiConnection";
-import type { ParameterResponse } from "../interfaces/ParameterResponseInterface";
+import type { Parameter } from "@/platform/interfaces/ParameterInterface";
 
-export const getParamListAction = (): Promise<ParameterResponse[]> => {
+export const getParamListAction = (): Promise<Parameter[]> => {
   return ApiConnection.get("/parameters/all");
 };

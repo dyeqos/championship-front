@@ -1,11 +1,11 @@
 // store.ts
 import { create } from "zustand";
-import type { ParameterRequest } from "../interfaces/ParameterRequestInterface";
+import type { Parameter } from "@/platform/interfaces/ParameterInterface";
 
 // Define types for state & actions
 interface ParameterState {
-  parameter: ParameterRequest;
-  setFormParam: (data: ParameterRequest) => void;
+  parameter: Parameter;
+  setFormParam: (data: Parameter) => void;
   clearFormParam: () => void;
 }
 

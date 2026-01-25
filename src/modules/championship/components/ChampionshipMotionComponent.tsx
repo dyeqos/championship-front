@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
-import { PanelCard } from "@/components/customs/PanelCard";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import type { Championship } from "../interfaces/ChampionshipInterface";
 import { ChampionshipCardComponent } from "./ChampionshipCardComponent";
-import type { Championship } from "../../interfaces/ChampionshipInterface";
+// import type { Championship } from "../../interfaces/ChampionshipInterface";
+
 interface Props {
   championships: Championship[];
+  onReset: () => void;
 }
 
 const containerVariants: Variants = {
@@ -34,13 +35,9 @@ const cardVariants: Variants = {
   },
 };
 
-export const ChampionshipMotionComponent = ({ championships }: Props) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+export const ChampionshipsComponent = ({ championships, onReset }: Props) => {
   return (
     <>
-      {" "}
       {championships.length > 0 ? (
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6 sm:gap-4  lg:gab-6  "
@@ -68,29 +65,20 @@ export const ChampionshipMotionComponent = ({ championships }: Props) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <PanelCard>
-            <div className="text-center py-12">
-              <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
-                <Search className="h-12 w-12 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                No se encontraron campeonatos
-              </h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-6">
-                No hay campeonatos que coincidan con tus criterios de búsqueda.
-              </p>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setSearchQuery("");
-                  setCategoryFilter("all");
-                  setStatusFilter("all");
-                }}
-              >
-                Limpiar todos los filtros
-              </Button>
+          <div className="text-center py-10">
+            <div className="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+              <Search className="h-12 w-12 text-gray-400" />
             </div>
-          </PanelCard>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              No se encontraron resultados
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
+              No hay campeonatos que coincidan con tus criterios de búsqueda.
+            </p>
+            <Button variant="secondary" onClick={onReset}>
+              Limpiar todos los filtros
+            </Button>
+          </div>
         </motion.div>
       )}
     </>

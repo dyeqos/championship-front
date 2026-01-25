@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import { motion } from "framer-motion";
 
 import { cn } from "@/platform/tools/lib/utils";
-import { SideBarComponent } from "../components/siedebar/SideBarComponent";
+import { SideBarComponent } from "../components/sidebar/SideBarComponent";
 import { ButtonToggleContext } from "../context/ButtonToggleContext";
 import { NavBarComponent } from "../components/header/NavBarComponent";
 
@@ -53,13 +53,13 @@ export function MainLayout() {
       <div
         className={cn(
           "min-h-screen transition-all duration-300 ease-in-out",
-          isOpenToggle ? "md:pl-64" : "md:pl-0"
+          isOpenToggle ? "md:pl-64" : "md:pl-0",
         )}
       >
         {/* Header */}
         <NavBarComponent></NavBarComponent>
 
-        <main className="flex-1 p-4 md:p-6">
+        <main className="flex-1 p-2 md:p-4">
           <Outlet />
         </main>
       </div>

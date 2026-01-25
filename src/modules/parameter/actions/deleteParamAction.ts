@@ -1,6 +1,6 @@
 import { ApiConnection } from "@/platform/connections/ApiConnection";
-import type { ParameterResponse } from "../interfaces/ParameterResponseInterface";
+import type { Parameter } from "@/platform/interfaces/ParameterInterface";
 
 export const deleteParamAction = async (id: string) => {
-  return ApiConnection.delete<ParameterResponse>(`/parameters/${id}`);
+  return ApiConnection.delete<Parameter>(`/parameters/${id}`);
 };
