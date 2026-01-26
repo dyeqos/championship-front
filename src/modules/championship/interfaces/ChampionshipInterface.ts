@@ -10,4 +10,7 @@ export interface Championship {
   version: number;
   teamsCount?: number;
   progress?: number;
+  dateInit: string;
+  dateEnd: string;
+  totalTeams: number;
 }

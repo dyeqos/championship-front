@@ -44,7 +44,7 @@ export const InputComponent = <T extends FieldValues>(props: Props<T>) => {
   } = form;
   const error = get<FieldErrors<T>>(errors, name);
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 relative">
       {label && (
         <Label
           htmlFor={name.toString()}
@@ -77,7 +77,7 @@ export const InputComponent = <T extends FieldValues>(props: Props<T>) => {
               {isValidElement(icon) &&
                 cloneElement(icon, {
                   className:
-                    "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4",
+                    "absolute left-3 top-5 transform -translate-y-1/2 text-gray-400 h-4 w-4",
                 })}
               <Input
                 id={name.toString()}

@@ -1,6 +1,5 @@
 import { Trophy } from "lucide-react";
 import { useForm } from "react-hook-form";
-//import { ChampionshipMotionComponent } from "../components/championships/ChampionshipMotionComponent";
 import { TitleComponent } from "@/components/customs/title/TitleComponent";
 import { FilterComponent } from "../components/FilterComponent";
 import { ChampionshipsComponent } from "../components/ChampionshipMotionComponent";

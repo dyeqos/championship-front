@@ -26,14 +26,12 @@ export const FilterComponent = ({ form, onRefetch, onReset }: Props) => {
       onSubmit={handleSubmit(() => onRefetch())}
     >
       {/* Search */}
-      <div className="relative">
-        <InputComponent
-          form={form}
-          name="name"
-          placeholder="Buscar campeonato"
-          icon={<Search />}
-        />
-      </div>
+      <InputComponent
+        form={form}
+        name="name"
+        placeholder="Buscar campeonato"
+        icon={<Search />}
+      />
 
       {/* Category Filter */}
 

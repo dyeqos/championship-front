@@ -30,7 +30,7 @@ export const TableComponent = ({ onEdit }: Props) => {
 
   useEffect(() => {
     paramListQuery.refetch();
-  }, [paramListQuery]);
+  }, []);
 
   const handleDelete = async (id: string) => {
     setActive(true);

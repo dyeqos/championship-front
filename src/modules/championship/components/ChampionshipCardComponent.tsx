@@ -1,32 +1,21 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Calendar, Users } from "lucide-react";
-import { motion } from "framer-motion";
+import { Edit, Eye } from "lucide-react";
 import type { Championship } from "../interfaces/ChampionshipInterface";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { getGenderDescription } from "@/platform/tools/utils/GenderUtil";
 
 const getStatusBadge = (status: number) => {
   switch (status) {
-    // case "Active":
-    //   return <Badge variant="success">Activo</Badge>;
-    // case "Draft":
-    //   return <Badge variant="warning">Borrador</Badge>;
+    case 0:
+      return <Badge variant="secondary">Borrador</Badge>;
     case 1:
+      return <Badge variant="default">Activo</Badge>;
+    case 2:
       return <Badge variant="secondary">Finalizado</Badge>;
     default:
-      return <Badge variant="secondary">{status}</Badge>;
-  }
-};
-const getCategoryColor = (category: string | null) => {
-  switch (category) {
-    case "Hombres Sub 20":
-      return "bg-blue-600";
-    case "Mujeres Sub 18":
-      return "bg-pink-600";
-    case "Niños Sub 16":
-      return "bg-orange-600";
-    default:
-      return "bg-gray-600";
+      return <Badge variant="destructive">Sin Estado</Badge>;
   }
 };
 
@@ -46,88 +35,64 @@ interface Props {
 }
 
 export const ChampionshipCardComponent = ({ championship }: Props) => {
-  console.log(championship);
   return (
-    <>
-      <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer border-l-4 border-emerald-500">
-        <div
-          className="space-y-4"
-          onClick={() => handleCardClick(championship.id)}
-        >
-          {/* Header with Status Badge */}
-          <div className="flex items-start justify-between min-h-23">
-            <div className="flex space-x-3">
-              <div
-                className={`w-12 h-12 flex-none ${getCategoryColor(
-                  championship.category.name,
-                )} rounded-full flex items-center justify-center`}
-              >
-                <Users className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight">
-                  {championship.name.name}
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {championship.category.name}
-                </p>
-              </div>
-            </div>
-            {getStatusBadge(championship.state)}
+    <Card
+      className="hover:shadow-lg transition-all duration-300 cursor-pointer border-0 shadow-sm hover:shadow-xl"
+      onClick={() => handleCardClick(championship.id)}
+    >
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <CardTitle className="text-lg text-balance">
+              {championship.name.name}
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {getGenderDescription(championship.gender)}{" "}
+              {championship.category.name}
+            </p>
           </div>
-
-          {/* Championship Details */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-              <Calendar className="h-4 w-4" />
-              <span>Inicio: {new Date().toLocaleDateString("es-ES")}</span>
-            </div>
-
-            <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-              <Users className="h-4 w-4" />
-              <span>{championship.teamsCount ?? 0} equipos participando</span>
-            </div>
+          {getStatusBadge(championship.state)}
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">Progreso</span>
+            <span className="text-sm font-medium">
+              {championship.progress ?? 0}%
+            </span>
           </div>
+          <Progress value={championship.progress} className="h-2" />
+        </div>
 
-          {/* Progress Bar */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">
-                Progreso del Campeonato
-              </span>
-              <span className="font-medium text-gray-900 dark:text-white">
-                {championship.progress ?? 0}%
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-              <motion.div
-                className="bg-emerald-600 h-3 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${championship.progress ?? 0}%` }}
-                transition={{
-                  duration: 1,
-                  delay: 0.5,
-                  ease: "easeOut",
-                }}
-              />
-            </div>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className="text-muted-foreground">Fecha Inicio</p>
+            <p className="font-medium">{championship.dateInit}</p>
           </div>
-
-          {/* Edit Button */}
-          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-            <Button
-              // variant={championship.status === "Draft" ? "primary" : "secondary"}
-              size="sm"
-              className="w-full"
-              disabled={championship.state !== 1}
-              onClick={(e) => handleEditClick(e, championship)}
-            >
-              <Edit size={16} className="mr-2" />
-              {championship.state === 1 ? "Editar" : "Editar (Deshabilitado)"}
-            </Button>
+          <div>
+            <p className="text-muted-foreground">Equipos</p>
+            <p className="font-medium">{championship.totalTeams}</p>
           </div>
         </div>
-      </Card>
-    </>
+
+        <div className="flex gap-2 pt-2">
+          <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+            <Eye className="h-4 w-4 mr-2" />
+            Ver
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 bg-transparent"
+            disabled={championship.state === 1}
+            onClick={(e) => handleEditClick(e, championship)}
+          >
+            <Edit className="h-4 w-4 mr-2" />
+            {championship.state === 1 ? "Editar (Deshabilitado)" : "Editar"}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
